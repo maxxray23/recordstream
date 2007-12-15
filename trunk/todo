@@ -1,0 +1,11 @@
+perf test
+   recs-collate lru size 1 v. optimized adjacent recs collate
+   JSON v. old recs v. other serialization (Data::Dumper, Storable, ?)
+Clean up DBHandle test to not drop testDb file
+AMZN specific
+   sources
+      host/hostclass HW info
+      p4
+      Manifest
+   sinks
+      ...

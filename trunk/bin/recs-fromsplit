@@ -1,0 +1,79 @@
+#!/usr/bin/perl
+
+$| = 1;
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Recs::OutputStream;
+use Recs::Record;
+
+my @fields;
+my $delim = ',';
+
+Getopt::Long::Configure("pass_through");
+GetOptions(
+   "delim|d=s" => \$delim,
+   "field|f=s" => sub { push @fields, split(/,/, $_[1]); },
+   "help"      => \&usage,
+);
+
+my $out = Recs::OutputStream->new();
+while(<>)
+{
+   chomp;
+   my @a = split2($delim, $_);
+
+   my %h;
+   for(my $i = 0; $i < @a; ++$i)
+   {
+      $h{$fields[$i] || $i} = $a[$i];
+   }
+   my $r = Recs::Record->new(%h);
+   $out->put_record($r);
+}
+
+sub split2
+{
+   my ($delim, $s) = @_;
+
+   my @r;
+
+   my $idx;
+   my $start = 0;
+   while(($idx = index($s, $delim, $start)) != -1)
+   {
+      push @r, substr($s, $start, $idx - $start);
+      $start = $idx + length($delim);
+   }
+   push @r, substr($s, $start);
+
+   return @r;
+}
+
+sub usage
+{
+   while(my $l = <DATA>)
+   {
+      print $l;
+   }
+   exit 1;
+}
+
+__DATA__
+Usage: recs-fromsplit <args> [<files>]
+   Each line of input (or lines of <files>) is split on provided delimiter to
+   produce an output record.  Fields are named numerically (0, 1, etc.) or as
+   given by --field.
+
+Arguments:
+   --delim|-d <delim>    Delimiter to use for splitting input lines (default ',').
+   --field|-f <fields>   Comma separated list of field names.  May be specified multiple times.
+   --help                Bail and output this help screen.
+
+Examples:
+   Parse space separated fields x and y.
+      recs-fromsplit --field x,y --delim ' '
+   Parse comma separated fields a, b, and c.
+      recs-fromsplit --field a,b,c
