@@ -18,7 +18,7 @@ do_test(7, 7, 3, 1);
 
 sub do_test
 {
-   my ($min, @n) = @_;
+   my ($max, @n) = @_;
 
    my $cookie = $aggr->initial();
 
@@ -29,5 +29,5 @@ sub do_test
 
    my $value = $aggr->squish($cookie);
 
-   is($value, $min, "max of " . join(", ", @n));
+   is($value, $max, "max of " . join(", ", @n));
 }
