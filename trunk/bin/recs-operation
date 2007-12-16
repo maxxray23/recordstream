@@ -46,3 +46,6 @@ if ( $@ || $op->wants_help() ) {
 }
 
 $op->run_operation();
+$op->finish();
+
+exit $op->get_exit_value();
