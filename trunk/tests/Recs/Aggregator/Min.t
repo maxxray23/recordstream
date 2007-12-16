@@ -9,13 +9,25 @@ BEGIN { use_ok("Recs::Aggregator::Minimum"); }
 
 ok(my $aggr = Recs::Aggregator::Minimum->new("x"), "Initialize");
 
-my $cookie = $aggr->initial();
+do_test(1, 1, 3, 7);
+do_test(1, 1, 7, 3);
+do_test(1, 3, 1, 7);
+do_test(1, 3, 7, 1);
+do_test(1, 7, 1, 3);
+do_test(1, 7, 3, 1);
 
-foreach my $n (1, 3, 7)
+sub do_test
 {
-   $cookie = $aggr->combine($cookie, Recs::Record->new("x" => $n));
+   my ($min, @n) = @_;
+
+   my $cookie = $aggr->initial();
+
+   foreach my $n (@n)
+   {
+      $cookie = $aggr->combine($cookie, Recs::Record->new("x" => $n));
+   }
+
+   my $value = $aggr->squish($cookie);
+
+   is($value, $min, "min of " . join(", ", @n));
 }
-
-my $value = $aggr->squish($cookie);
-
-is($value, 1, "min of 1, 3, 7");
