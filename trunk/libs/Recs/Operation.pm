@@ -73,7 +73,7 @@ sub print_usage {
       print "$message\n";
    }
 
-   print $class->usage() . "\n";
+   print $class->usage();
    exit 1;
 }
 
