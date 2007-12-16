@@ -1,5 +1,8 @@
 package OperationHelper;
 
+use strict;
+use warnings;
+
 use Test::More;
 use Recs::InputStream;
 
@@ -70,6 +73,8 @@ sub do_match {
    my $operation_class = "Recs::Operation::$operation_name";
    my $op = $operation_class->new($args);
 
+   ok($op, "Operation initialization");
+
    my $helper = $class->new(
       operation => $op,
       input     => $input,
@@ -79,6 +84,32 @@ sub do_match {
    $helper->matches();
 
    return $helper;
+}
+
+sub test_output {
+   my $class          = shift;
+   my $operation_name = shift;
+   my $args           = shift;
+   my $input          = shift;
+   my $output         = shift;
+  
+   my $operation_class = "Recs::Operation::$operation_name";
+   my $op = $operation_class->new($args);
+
+   ok($op, "Object initialization");
+
+   my @collected_output;
+   $op->set_printer(sub { push @collected_output, shift() });
+
+   my $helper = OperationHelper->new(
+      operation => $op,
+      input     => $input,
+      output    => '',
+   );
+
+   $helper->matches();
+
+   is(join ('', @collected_output), $output, "Output matches excepted");
 }
 
 

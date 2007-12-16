@@ -11,28 +11,17 @@ my $stream = <<STREAM;
 {"foo":5,"zoo":"biz5"}
 STREAM
 
-my $solution = [ '1 biz1',
-                 '2 biz2',
-                 '3 biz3',
-                 '4 biz4',
-                 '5 biz5', ];
+my $solution = <<SOLUTION;
+1 biz1
+2 biz2
+3 biz3
+4 biz4
+5 biz5
+SOLUTION
 
-my $op = Recs::Operation::eval->new([ '$r->{foo} . " " . $r->{zoo}']);
-
-ok($op, "Object initialization");
-
-my @output;
-$op->set_printer(sub { push @output, shift() });
-
-my $helper = OperationHelper->new(
-      operation => $op,
-      input     => $stream,
-      output    => '',
+OperationHelper->test_output(
+   'eval',
+   [ '$r->{foo} . " " . $r->{zoo}'],
+   $stream,
+   $solution,
 );
-
-$helper->matches();
-
-use Data::Dumper;
-print Dumper \@output;
-
-is_deeply(\@output, $solution, "Output matches excepted");

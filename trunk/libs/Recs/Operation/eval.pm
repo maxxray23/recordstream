@@ -1,6 +1,9 @@
 package Recs::Operation::eval;
 
-use base qw(Recs::Operation Recs::ExpressionHolder);
+use strict;
+use warnings;
+
+use base qw(Recs::Operation Recs::ExpressionHolder Recs::ScreenPrinter);
 
 sub init {
    my $this = shift;
@@ -17,8 +20,6 @@ sub accept_record {
    my $this   = shift;
    my $record = shift;
 
-   my $printer = $this->get_printer();
-
    my $value;
    eval {
       $value = $this->run_expr($record);
@@ -28,20 +29,8 @@ sub accept_record {
       warn "Code threw: $@";
    }
    else {
-      $printer->($value);
+      $this->print_value($value . "\n");
    }
-}
-
-sub get_printer {
-   my $this = shift;
-   $this->{'PRINTER'} ||= sub { print $_[0] . "\n" };
-   return $this->{'PRINTER'};
-}
-
-sub set_printer {
-   my $this    = shift;
-   my $printer = shift;
-   $this->{'PRINTER'} = $printer;
 }
 
 sub usage {
