@@ -48,7 +48,7 @@ sub _set_wants_help {
    $this->{'WANTS_HELP'} = $help;
 }
 
-sub wants_help {
+sub get_wants_help {
    my $this = shift;
    return $this->{'WANTS_HELP'};
 }

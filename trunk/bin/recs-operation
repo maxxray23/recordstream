@@ -36,7 +36,7 @@ eval {
   $op = $module->new(\@args);
 };
 
-if ( $@ || $op->wants_help() ) {
+if ( $@ || $op->get_wants_help() ) {
    $module->print_usage($@);
 }
 
