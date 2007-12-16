@@ -1,0 +1,35 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+use FindBin qw($Script $RealScript);
+
+if ( $Script eq $RealScript ) {
+   print <<MESSAGE;
+WARNING!
+
+recs-operation is a wrapper for all other recs commands.  You do not want to
+use this script.  It uses the Recs::Operation::* modules to performation
+operations, like recs-grep.  If you are looking for implementation of those
+scripts, look in those modules.  Otherwise, use a different recs script like
+recs-grep or recs-collate directly.
+
+Terminating program.
+MESSAGE
+   exit 1;
+}
+
+my @args = @ARGV;
+@ARGV = ();
+
+my $operation = $Script;
+$operation =~ s/^recs-//;
+
+my $module = "Recs::Operation::$operation";
+eval "require $module";
+if ( $@ ) {
+   die "Could not load $module: $@";
+}
+
+my $op = $module->new(\@args);
+$op->run_operation()
