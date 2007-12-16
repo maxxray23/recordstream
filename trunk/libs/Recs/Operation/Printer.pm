@@ -4,7 +4,7 @@ use base qw(Recs::Operation);
 
 use Recs::OutputStream;
 
-sub init() {
+sub init {
    my $this = shift;
    my $args = shift || [];
 
