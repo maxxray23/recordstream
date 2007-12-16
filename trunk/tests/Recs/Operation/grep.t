@@ -16,8 +16,6 @@ my $solution = <<SOLUTION;
 {"foo":5,"zoo":"biz5"}
 SOLUTION
 
-my $dir = $ENV{'BASE_TEST_DIR'};
-
 use OperationHelper;
 
 my $grep = Recs::Operation::grep->new([ '$r->{foo} > 2' ]);
