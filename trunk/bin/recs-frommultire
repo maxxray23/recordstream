@@ -1,0 +1,145 @@
+#!/usr/bin/perl
+
+$| = 1;
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+use Recs::OutputStream;
+use Recs::Record;
+
+my @regexes;
+my $clobber = 0;
+my %keep;
+my $keep_all = 0;
+
+Getopt::Long::Configure("pass_through");
+GetOptions(
+   "no-flush-regex|regex|re=s"   => sub { push @regexes, [interpret_regex($_[1]), 0, 0]; },
+   "pre-flush-regex|pre=s"       => sub { push @regexes, [interpret_regex($_[1]), 1, 0]; },
+   "post-flush-regex|post=s"     => sub { push @regexes, [interpret_regex($_[1]), 0, 1]; },
+   "double-flush-regex|double=s" => sub { push @regexes, [interpret_regex($_[1]), 1, 1]; },
+   "clobber"                     => \$clobber,
+   "keep-all"                    => \$keep_all,
+   "keep=s"                      => sub { for my $field (split(/,/, $_[1])) { $keep{$field} = 1; } },
+   "help"                        => \&usage,
+);
+
+usage('Must specify at least one regex') unless(@regexes);
+
+my $record = Recs::Record->new();
+my $out = Recs::OutputStream->new();
+while(my $line = <>)
+{
+   chomp $line;
+
+   my $regex_index = 0;
+   for my $regex (@regexes)
+   {
+      my ($string, $fields, $pre_flush, $post_flush) = @$regex;
+
+      if(my @groups = ($line =~ $string))
+      {
+         if(!$clobber)
+         {
+            for(my $index = 0; $index < @groups; ++$index)
+            {
+               my $field_name = ($index < @$fields) ? $fields->[$index] : ($regex_index . "-" . $index);
+               if($record->exists($field_name))
+               {
+                  $pre_flush = 1;
+               }
+            }
+         }
+
+         if($pre_flush)
+         {
+            flush();
+         }
+
+         for(my $index = 0; $index < @groups; ++$index)
+         {
+            my $field_name = ($index < @$fields) ? $fields->[$index] : ($regex_index . "-" . $index);
+            $record->set($field_name, $groups[$index]);
+         }
+
+         if($post_flush)
+         {
+            flush();
+         }
+      }
+      ++$regex_index;
+   }
+}
+
+sub flush
+{
+   $out->put_record($record);
+   if($keep_all)
+   {
+      return;
+   }
+   $record->prune(keys(%keep));
+}
+
+sub interpret_regex
+{
+   my ($string) = @_;
+
+   my $fields = [];
+   if($string =~ /^([^=]*)=(.*)$/)
+   {
+      $fields = [split(/,/, $1)];
+      $string = $2;
+   }
+
+   return ($string, $fields);
+}
+
+sub usage
+{
+   my ($message) = @_;
+   if(defined($message))
+   {
+      print $message . "\n";
+   }
+   while(my $l = <DATA>)
+   {
+      print $l;
+   }
+   exit 1;
+}
+
+__DATA__
+Usage: recs-frommultire <args> [<files>]
+   Match multiple regexes against each line of input (or lines of <files>).
+   Various parameters control when the accumulated fields are flushed to output
+   as a record and which, if any, fields are cleared when the record is
+   flushed.
+
+   By default regexes do not necessarily flush on either side, would-be field
+   collisions cause a flush and all fields are cleared on a flush.
+
+Arguments:
+   --no-flush-regex|--regex|--re <regex>   Add a normal regex.
+   --pre-flush-regex|--pre <regex>         Add a regex that flushes before
+                                           interpretting fields when matched.
+   --post-flush-regex|--post <regex>       Add a regex that flushes after
+                                           interpretting fields when matched.
+   --double-flush-regex|--double <regex>   Add a regex that flushes both before
+                                           and after interprettying fields when
+                                           matched.
+   --clobber                               Do not flush records when a field
+                                           from a match would clobber an
+                                           already existing field.
+   --keep-all                              Do not clear any fields on a flush.
+   --keep <fields>                         Do not clear this comma separated
+                                           list of fields on a flush.
+   --help                                  Bail and output this help screen.
+
+Examples:
+   Typical use case one: parse several fields on separate lines
+      recs-frommultire --re 'fname,lname=^Name: (.*) (.*)$' --re 'addr=^Address: (.*)$'
+   Typical use case two: some fields apply to multiple records ("department" here)
+      recs-frommultire --post 'fname,lname=^Name: (.*) (.*)$' --re 'deparment=^Department: (.*)$' --clobber --keep team
