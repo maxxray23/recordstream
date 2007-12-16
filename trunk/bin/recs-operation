@@ -37,12 +37,7 @@ eval {
 };
 
 if ( $@ || $op->wants_help() ) {
-   my $message = $@;
-   if ( $@ eq 'Help' ) {
-      $message = '';
-   }
-
-   $module->print_usage($message);
+   $module->print_usage($@);
 }
 
 $op->run_operation();
