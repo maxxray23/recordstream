@@ -58,6 +58,27 @@ sub matches {
    ok((not $results->[$i+1]), "no extra records");
 }
 
+sub do_match {
+   my $class          = shift;
+   my $operation_name = shift;
+   my $args           = shift;
+   my $input          = shift;
+   my $output         = shift;
+
+   my $operation_class = "Recs::Operation::$operation_name";
+   my $op = $operation_class->new($args);
+
+   my $helper = $class->new(
+      operation => $op,
+      input     => $input,
+      output    => $output,
+   );
+
+   $helper->matches();
+
+   return $helper;
+}
+
 
 package Keeper;
 

@@ -1,4 +1,5 @@
 use Test::More qw(no_plan);
+use OperationHelper;
 
 BEGIN { use_ok( 'Recs::Operation::grep' ) };
 
@@ -16,14 +17,9 @@ my $solution = <<SOLUTION;
 {"foo":5,"zoo":"biz5"}
 SOLUTION
 
-use OperationHelper;
-
-my $grep = Recs::Operation::grep->new([ '$r->{foo} > 2' ]);
-
-my $helper = OperationHelper->new(
-   operation => $grep,
-   input     => $stream,
-   output    => $solution,
+OperationHelper->do_match(
+   'grep',
+   [ '$r->{foo} > 2' ],
+   $stream,
+   $solution,
 );
-
-$helper->matches();
