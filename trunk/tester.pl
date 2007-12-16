@@ -15,7 +15,9 @@ if ( $debug ) {
 
 # my $dir = shift || '.';
 my $dir = '.';
+
 push @INC, "$dir/libs";
+push @INC, "$dir/tests";
 
 $ENV{'BASE_TEST_DIR'} = "$dir/tests";
 

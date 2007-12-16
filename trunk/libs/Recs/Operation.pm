@@ -86,10 +86,22 @@ sub finish {
    $this->_get_next_operation()->finish();
 }
 
+sub get_input_stream {
+   my $this = shift;
+   $this->{'INPUT_STREAM'} ||= Recs::InputStream->new_magic($this->_get_extra_args());
+   return $this->{'INPUT_STREAM'};
+}
+
+sub set_input_stream {
+   my $this   = shift;
+   my $stream = shift;
+   $this->{'INPUT_STREAM'} = $stream;
+}
+
 sub run_operation {
    my $this = shift;
 
-   my $input = Recs::InputStream->new_magic($this->_get_extra_args());
+   my $input = $this->get_input_stream(); 
 
    while ( my $record = $input->get_record() ) {
       $this->accept_record($record);
