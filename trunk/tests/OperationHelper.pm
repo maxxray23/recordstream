@@ -55,7 +55,7 @@ sub matches {
       $i++;
    }
 
-   ok((not $results->[$i+1]), "no extra records");
+   ok((not $results->[$i]), "no extra records");
 }
 
 sub do_match {
