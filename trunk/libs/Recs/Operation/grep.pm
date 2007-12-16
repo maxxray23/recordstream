@@ -14,6 +14,8 @@ sub accept_record {
    my $this   = shift;
    my $record = shift;
 
+   $DB::single=1;
+
    eval {
       if ( $this->run_expr($record) ) {
          $this->push_record($record);
@@ -41,6 +43,5 @@ Examples:
       recs-grep '\$r->{name} eq "John"'
 USAGE
 }
-
 
 1;

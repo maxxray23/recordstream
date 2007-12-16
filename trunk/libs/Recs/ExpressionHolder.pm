@@ -11,6 +11,7 @@ sub run_expr {
    my $value = eval $__MY__expr;
 
    die $@ if ( $@ );
+   return $value;
 }
 
 sub _set_expr {

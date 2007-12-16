@@ -33,7 +33,7 @@ sub parse_options {
    my $args         = shift || [];
    my $options_spec = shift || {};
 
-   $options_spec->{'help'} = sub { $this->print_usage(); exit 1; };
+   $options_spec->{'help'} ||= sub { $this->_set_wants_help(1); };
 
    local @ARGV = @$args;
    GetOptions(%$options_spec);
@@ -41,15 +41,28 @@ sub parse_options {
    $this->_set_extra_args(\@ARGV);
 }
 
+sub _set_wants_help {
+   my $this = shift;
+   my $help = shift;
+
+   $this->{'WANTS_HELP'} = $help;
+}
+
+sub wants_help {
+   my $this = shift;
+   return $this->{'WANTS_HELP'};
+}
+
 sub print_usage {
-   my $this    = shift;
+   my $class   = shift;
    my $message = shift;
 
    if ( $message ) {
       print "$message\n";
    }
 
-   print $this->usage() . "\n";
+   print $class->usage() . "\n";
+   exit 1;
 }
 
 sub init {

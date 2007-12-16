@@ -31,5 +31,18 @@ if ( $@ ) {
    die "Could not load $module: $@";
 }
 
-my $op = $module->new(\@args);
-$op->run_operation()
+my $op;
+eval { 
+  $op = $module->new(\@args);
+};
+
+if ( $@ || $op->wants_help() ) {
+   my $message = $@;
+   if ( $@ eq 'Help' ) {
+      $message = '';
+   }
+
+   $module->print_usage($message);
+}
+
+$op->run_operation();
