@@ -64,12 +64,12 @@ sub _set_use_return {
    my $this  = shift;
    my $value = shift;
 
-   $this->{'use_return'} = $value;
+   $this->{'USE_RETURN'} = $value;
 }
 
 sub get_use_return {
    my $this = shift;
-   return $this->{'use_return'} || 0;
+   return $this->{'USE_RETURN'} || 0;
 }
 
 sub usage {
