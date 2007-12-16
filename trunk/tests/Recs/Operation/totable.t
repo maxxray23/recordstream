@@ -60,3 +60,35 @@ OperationHelper->test_output(
    $solution3,
 );
 
+my $solution4 = <<SOLUTION;
+foo	zoo
+1	biz1
+2	biz2
+3	biz3
+4	biz4
+5	biz5
+SOLUTION
+
+OperationHelper->test_output(
+   'totable',
+   [qw(--spreadsheet)],
+   $stream,
+   $solution4,
+);
+
+my $solution5 = <<SOLUTION;
+footzoo
+1tbiz1
+2tbiz2
+3tbiz3
+4tbiz4
+5tbiz5
+SOLUTION
+
+OperationHelper->test_output(
+   'totable',
+   [qw(--spreadsheet --delim t)],
+   $stream,
+   $solution5,
+);
+
