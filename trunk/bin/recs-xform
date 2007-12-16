@@ -34,7 +34,7 @@ while($r = $__MY__in->get_record())
    if($@)
    {
       chomp $@;
-      warn "Code threw: " . $@ . "\n";
+      warn "Code threw: " . $@;
    }
    else
    {
