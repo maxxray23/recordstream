@@ -14,17 +14,21 @@ sub accept_record {
    my $this   = shift;
    my $record = shift;
 
-   $DB::single=1;
-
    eval {
       if ( $this->run_expr($record) ) {
          $this->push_record($record);
+         $this->{'SEEN_RECORD'} = 1;
       }
    };
 
    if ( $@ ) {
       warn "Code threw: $@";
    }
+}
+
+sub stream_done {
+   my $this = shift;
+   $this->_set_exit_value(1) unless ( $this->{'SEEN_RECORD'} );
 }
 
 sub usage {

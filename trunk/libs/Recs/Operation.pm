@@ -53,6 +53,18 @@ sub wants_help {
    return $this->{'WANTS_HELP'};
 }
 
+sub _set_exit_value {
+   my $this  = shift;
+   my $value = shift;
+
+   $this->{'EXIT_VALUE'} = $value;
+}
+
+sub get_exit_value {
+   my $this = shift;
+   return $this->{'EXIT_VALUE'} || 0;
+}
+
 sub print_usage {
    my $class   = shift;
    my $message = shift;
@@ -66,6 +78,12 @@ sub print_usage {
 }
 
 sub init {
+}
+
+sub finish {
+   my $this = shift;
+   $this->stream_done();
+   $this->_get_next_operation()->finish();
 }
 
 sub run_operation {

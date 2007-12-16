@@ -18,4 +18,7 @@ sub accept_record {
    $this->{'OUT'}->put_record($record);
 }
 
+sub finish {
+}
+
 1;
