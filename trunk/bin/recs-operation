@@ -32,7 +32,7 @@ if ( $@ ) {
 }
 
 my $op;
-eval { 
+eval {
   $op = $module->new(\@args);
 };
 
