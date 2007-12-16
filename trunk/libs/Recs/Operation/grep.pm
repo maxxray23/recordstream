@@ -9,9 +9,11 @@ sub init {
    my $args = shift;
 
    $this->parse_options($args);
-   if(!@{$this->_get_extra_args()}) {
+
+   if ( ! @{$this->_get_extra_args()} ) {
       die "Missing expression\n";
    }
+   
    $this->_set_expr(shift @{$this->_get_extra_args()});
 }
 

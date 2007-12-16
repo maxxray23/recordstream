@@ -50,9 +50,11 @@ sub matches {
    my $results = $keeper->get_records();
    my $i = 0;
 
-   while ( my $rec = $output->get_record() ) {
-      is_deeply($results->[$i], $rec, "Records match");
-      $i++;
+   if ( $output ) {
+      while ( my $rec = $output->get_record() ) {
+         is_deeply($results->[$i], $rec, "Records match");
+         $i++;
+      }
    }
 
    ok((not $results->[$i]), "no extra records");
