@@ -1,5 +1,7 @@
 package Recs::Operation::grep;
 
+use strict;
+
 use base qw(Recs::Operation Recs::ExpressionHolder);
 
 sub init {
@@ -7,6 +9,9 @@ sub init {
    my $args = shift;
 
    $this->parse_options($args);
+   if(!@{$this->_get_extra_args()}) {
+      die "Missing expression\n";
+   }
    $this->_set_expr(shift @{$this->_get_extra_args()});
 }
 
