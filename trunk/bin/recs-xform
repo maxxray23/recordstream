@@ -38,7 +38,34 @@ while($r = $__MY__in->get_record())
    }
    else
    {
-      $__MY__out->put_record($r);
+      my $records;
+      if(ref($r) ne "ARRAY")
+      {
+         $records = [$r];
+      }
+      else
+      {
+         $records = $r;
+      }
+      for my $record (@$records)
+      {
+         if(ref($record) eq "Recs::Record")
+         {
+            $__MY__out->put_record($record);
+         }
+         elsif(ref($record) eq "HASH")
+         {
+            $__MY__out->put_hashref($record);
+         }
+         elsif(ref($record) eq "")
+         {
+            warn "Found scalar in output";
+         }
+         else
+         {
+            warn "Found strange ref in output, ref is " . ref($record);
+         }
+      }
    }
 }
 
