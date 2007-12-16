@@ -10,5 +10,4 @@ more aggregators
 perf test
    recs-collate lru size 1 v. optimized adjacent recs collate
    JSON v. old recs v. other serialization (Data::Dumper, Storable, ?)
-recs-xform - mechanism for handling multiple output records
 recs-frommultire - allow dynamic field names, allow dropped fields
