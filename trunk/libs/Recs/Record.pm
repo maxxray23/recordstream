@@ -25,7 +25,10 @@ glorified hash with some helper methods.
 
 =item Recs::Record->new(%hash);
 
-Construct a new record with provided keys and values.
+Construct a new record with provided keys and values.  Can take a single
+argument which is a hash ref.  If this form is used, it will bless that hash
+and use it, so that hash ref now belongs to this object.  This avoids memory
+copies
 
 =back
 
@@ -197,6 +200,14 @@ our $AUTOLOAD;
 sub new
 {
    my $class = shift;
+
+   if ( scalar @_ == 1 ) {
+      my $arg = $_[0];
+      if ( UNIVERSAL::isa($arg, 'HASH') ) {
+         bless $arg, $class;
+         return $arg;
+      }
+   }
 
    my $this = { @_ };
    bless $this, $class;

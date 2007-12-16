@@ -200,7 +200,7 @@ sub get_record {
       return $this->call_next_record();
    }
 
-   my $record = Recs::Record->new(%{JSON::Syck::Load($line)});
+   my $record = Recs::Record->new(JSON::Syck::Load($line));
 
    return $record;
 }

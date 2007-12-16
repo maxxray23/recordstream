@@ -19,6 +19,13 @@ push @INC, "$dir/libs";
 
 $ENV{'BASE_TEST_DIR'} = "$dir/tests";
 
+my $file = shift;
+
+if ( $file ) {
+   runtests($file);
+   exit;
+}
+
 my @files = `find $dir/tests -name '*.t'`;
 chomp @files;
 
