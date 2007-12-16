@@ -1,30 +1,28 @@
 package Recs::Operation::grep;
 
-use base qw(Recs::Operation);
+use base qw(Recs::Operation Recs::ExpressionHolder);
 
 sub init {
    my $this = shift;
    my $args = shift;
 
    $this->parse_options($args);
-
-   $this->_set_expr($this->_get_extra_args()->[0]);
-}
-
-sub _set_expr {
-   my $this = shift;
-   my $expr = shift;
-
-   $this->{'expr'} = $expr;
-}
-
-sub _get_expr {
-   my $this = shift;
-   return $this->{'expr'};
+   $this->_set_expr(shift @{$this->_get_extra_args()});
 }
 
 sub accept_record {
-   print "Got record\n";
+   my $this   = shift;
+   my $record = shift;
+
+   eval {
+      if ( $this->run_expr($record) ) {
+         $this->push_record($record);
+      }
+   };
+
+   if ( $@ ) {
+      warn "Code threw: $@";
+   }
 }
 
 sub usage {

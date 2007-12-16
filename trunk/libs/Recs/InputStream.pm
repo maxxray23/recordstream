@@ -75,6 +75,7 @@ streams are exhausted
 use strict;
 use lib;
 
+use IO::String;
 use JSON::Syck;
 
 use Recs::Record;

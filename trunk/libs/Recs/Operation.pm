@@ -7,6 +7,14 @@ use Recs::InputStream;
 use Getopt::Long;
 use Carp;
 
+sub accept_record {
+   subclass_should_implement(shift);
+}
+
+sub usage {
+   subclass_should_implement(shift);
+}
+
 sub new {
    my $class = shift;
    my $args  = shift;
@@ -22,7 +30,7 @@ sub new {
 
 sub parse_options {
    my $this         = shift;
-   my $args         = shift;
+   my $args         = shift || [];
    my $options_spec = shift || {};
 
    $options_spec->{'help'} = sub { $this->print_usage(); exit 1; };
@@ -31,30 +39,6 @@ sub parse_options {
    GetOptions(%$options_spec);
 
    $this->_set_extra_args(\@ARGV);
-}
-
-sub _set_expr {
-   my $this = shift;
-   my $expr = shift;
-
-   $this->{'expr'} = $expr;
-}
-
-sub _get_expr {
-   my $this = shift;
-   return $this->{'expr'};
-}
-
-sub _set_extra_args {
-   my $this = shift;
-   my $args = shift;
-
-   $this->{'EXTRA_ARGS'} = $args;
-}
-
-sub _get_extra_args {
-   my $this = shift;
-   return $this->{'EXTRA_ARGS'};
 }
 
 sub print_usage {
@@ -77,12 +61,8 @@ sub run_operation {
    my $input = Recs::InputStream->new_magic($this->_get_extra_args());
 
    while ( my $record = $input->get_record() ) {
-      $this->accept_record();
+      $this->accept_record($record);
    }
-}
-
-sub accept_record {
-   subclass_should_implement(shift);
 }
 
 sub subclass_should_implement {
@@ -90,14 +70,44 @@ sub subclass_should_implement {
    croak "Subclass should implement: " . ref($this);
 }
 
-sub usage {
-   subclass_should_implement(shift);
-}
-
 sub stream_done {
 }
 
-sub run_expr {
+sub push_record {
+   my $this   = shift;
+   my $record = shift;
+
+   $this->_get_next_operation()->accept_record($record);
+}
+
+sub _get_next_operation {
+   my $this = shift;
+
+   unless ( $this->{'NEXT'} ) {
+      require Recs::Operation::Printer;
+      $this->{'NEXT'} = Recs::Operation::Printer->new();
+   }
+
+   return $this->{'NEXT'};
+}
+
+sub _set_next_operation {
+   my $this = shift;
+   my $next = shift;
+
+   $this->{'NEXT'} = $next;
+}
+
+sub _set_extra_args {
+   my $this = shift;
+   my $args = shift;
+
+   $this->{'EXTRA_ARGS'} = $args;
+}
+
+sub _get_extra_args {
+   my $this = shift;
+   return $this->{'EXTRA_ARGS'};
 }
 
 1;

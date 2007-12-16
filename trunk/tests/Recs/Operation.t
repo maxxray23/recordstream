@@ -11,6 +11,7 @@ my $args_spec = {
    'foo=s' => \$foo,
 };
 
-$op->parse_options($args_spec, [ '--foo', 'bar' ]);
+$op->parse_options([ '--foo', 'bar', 'blah' ], $args_spec);
 
 ok($foo eq 'bar', "Option parsing test");
+ok($op->_get_extra_args()->[0] eq 'blah', "Testing extra args");
