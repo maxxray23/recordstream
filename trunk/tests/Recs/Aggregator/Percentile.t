@@ -10,7 +10,7 @@ BEGIN { use_ok("Recs::Aggregator::Percentile"); }
 ok(my $aggr = Recs::Aggregator::Percentile->new(90, "x"), "Initialize");
 is(percentile_100_values($aggr), 91, "90th percentile of 1-100");
 
-ok($aggr = Recs::Aggregator::Percentile->new(100,"x"), "Initialize");
+ok($aggr = Recs::Aggregator::Percentile->new(100, "x"), "Initialize");
 is(percentile_100_values($aggr), 100, "100th percentile of 1-100");
 
 sub percentile_100_values {
