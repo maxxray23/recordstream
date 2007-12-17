@@ -13,7 +13,7 @@ sub init {
    if ( ! @{$this->_get_extra_args()} ) {
       die "Missing expression\n";
    }
-   
+
    $this->_set_expr(shift @{$this->_get_extra_args()});
 }
 
