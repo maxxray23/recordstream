@@ -50,9 +50,9 @@ Usage: recs-sort <args> [<files>]
                      should be a field name to sort on.  The sort type should
                      be either lexical or numeric.  Default sort type is
                      lexical (can also use nat, lex, n, and l).  Additionallly,
-                     the sort type may be prefixed with '-' to indicate a decreasing
-                     sort order.  (See perldoc for Recs::Record for more on
-                     sort specs).
+                     the sort type may be prefixed with '-' to indicate a
+                     decreasing sort order.  (See perldoc for Recs::Record for
+                     more on sort specs).
     --reverse      - Reverses the sort order
     --help         - Bail and output this help screen.
 
