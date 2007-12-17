@@ -1,6 +1,9 @@
 use Test::More qw(no_plan);
 use OperationHelper;
 
+use strict;
+use warnings;
+
 BEGIN { use_ok( 'Recs::Operation::eval' ) };
 
 my $stream = <<STREAM;

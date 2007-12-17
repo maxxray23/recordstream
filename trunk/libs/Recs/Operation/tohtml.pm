@@ -101,10 +101,10 @@ Usage: recs-totable <args> [<files>]
    --fields <fields> - Fields to print in the table.  May be specified multiple
                        times, may be comma separated.  Default to all fields in
                        the first record.
-    --noheader       - Do not print the header row
-    --rowattributes  - HTML attributes to put on the tr tags
-    --cellattributes - HTML attributes to put on the td and th tag
-    --help           - Bail and output this help screen.
+   --noheader        - Do not print the header row
+   --rowattributes   - HTML attributes to put on the tr tags
+   --cellattributes  - HTML attributes to put on the td and th tag
+   --help            - Bail and output this help screen.
 
 Examples:
    Print all fields
