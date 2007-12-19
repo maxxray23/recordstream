@@ -66,19 +66,19 @@ sub run_operation {
 }
 
 sub split2 {
-   my ($delim, $s) = @_;
+   my ($delimiter, $string) = @_;
 
-   my @r;
+   my @sub_strings;
 
-   my $idx;
+   my $index;
    my $start = 0;
-   while(($idx = index($s, $delim, $start)) != -1) {
-      push @r, substr($s, $start, $idx - $start);
-      $start = $idx + length($delim);
+   while(($index = index($string, $delimiter, $start)) != -1) {
+      push @sub_strings, substr($string, $start, $index - $start);
+      $start = $index + length($delimiter);
    }
-   push @r, substr($s, $start);
+   push @sub_strings, substr($string, $start);
 
-   return @r;
+   return @sub_strings;
 }
 
 sub usage {
