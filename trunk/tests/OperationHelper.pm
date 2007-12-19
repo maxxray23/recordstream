@@ -53,14 +53,14 @@ sub matches {
    my $results = $keeper->get_records();
    my $i = 0;
 
+   my @output_records;
    if ( $output ) {
       while ( my $rec = $output->get_record() ) {
-         is_deeply($results->[$i], $rec, "Records match");
-         $i++;
+         push @output_records, $rec;
       }
    }
 
-   ok((not $results->[$i]), "no extra records");
+   is_deeply($results, \@output_records, "Records match");
 }
 
 sub do_match {
