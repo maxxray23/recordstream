@@ -23,10 +23,8 @@ sub init {
    $this->{'REVERSE'} = $reverse;
 }
 
-sub finish {
+sub stream_done {
    my $this = shift;
-
-   $DB::single=1;
 
    my @records = Recs::Record::sort($this->get_records(), @{$this->{'KEYS'}});
 

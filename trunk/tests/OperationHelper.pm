@@ -61,6 +61,8 @@ sub matches {
    }
 
    is_deeply($results, \@output_records, "Records match");
+
+   ok($keeper->has_called_finish(), "Has called finish");
 }
 
 sub do_match {
@@ -133,6 +135,16 @@ sub accept_record {
 sub get_records {
    my $this = shift;
    return $this->{'RECORDS'};
+}
+
+sub has_called_finish {
+   my $this = shift;
+   return $this->{'CALLED_FINISH'};
+}
+
+sub finish {
+  my $this = shift;
+  $this->{'CALLED_FINISH'} = 1;
 }
 
 1;

@@ -29,7 +29,7 @@ sub init {
    $this->{'SPREADSHEET'} = $spreadsheet;
 }
 
-sub finish {
+sub stream_done {
    my $this = shift;
 
    my $records = $this->get_records();

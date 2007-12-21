@@ -136,7 +136,7 @@ sub put {
    }
 }
 
-sub finish {
+sub stream_done {
    my $this = shift;
    $this->purge(0);
 }

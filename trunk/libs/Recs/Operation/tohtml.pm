@@ -33,8 +33,6 @@ sub accept_record {
    my $this   = shift;
    my $record = shift;
 
-   $DB::single = 1;
-
    $this->print_start($record);
 
    my $fields          = $this->{'FIELDS'};
@@ -88,7 +86,7 @@ sub print_header {
    $this->print_value("  </tr>\n");
 }
 
-sub finish {
+sub stream_done {
    my $this = shift;
    $this->print_value("</table>\n");
 }
