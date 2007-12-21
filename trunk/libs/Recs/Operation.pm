@@ -9,8 +9,7 @@ use Carp;
 
 sub accept_record {
    subclass_should_implement(shift);
-}
-
+} 
 sub usage {
    subclass_should_implement(shift);
 }
@@ -132,6 +131,33 @@ sub _get_next_operation {
    }
 
    return $this->{'NEXT'};
+}
+
+sub create_operation {
+   my $class  = shift;
+   my $script = shift;
+   my @args   = @_;
+
+   my $operation = $script;
+
+   die "Script not named recs-*: $script" unless ( $script =~ s/^recs-// );
+
+   my $module = "Recs::Operation::$script";
+   eval "require $module";
+   if ( $@ ) {
+      die "Could not load $module: $@";
+   }
+
+   my $op;
+   eval {
+      $op = $module->new(\@args);
+   };
+
+   if ( $@ || $op->get_wants_help() ) {
+      $module->print_usage($@);
+   }
+
+   return $op;
 }
 
 sub _set_next_operation {
