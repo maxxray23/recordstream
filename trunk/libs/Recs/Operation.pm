@@ -9,7 +9,8 @@ use Carp;
 
 sub accept_record {
    subclass_should_implement(shift);
-} 
+}
+
 sub usage {
    subclass_should_implement(shift);
 }
