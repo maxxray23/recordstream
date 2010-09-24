@@ -1,3 +1,0 @@
-#!/usr/bin/perl -w
-
-use Recs::Operation; Recs::Operation::main();
